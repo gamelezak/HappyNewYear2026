@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратный отсчёт до Нового Года! 🎄</title>
+    <link rel="stylesheet" href="styles/timer.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-snowflake"></i> До Нового 2025 Года осталось:</h1>
+            <p class="subtitle">Этот год был не лёгким, но давай встретим новый с улыбками на лицах=)</p>
+        </div>
+
+        <div class="countdown-container">
+            <div class="countdown">
+                <div class="time-box">
+                    <div class="number" id="days">00</div>
+                    <div class="label">Дней</div>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-box">
+                    <div class="number" id="hours">00</div>
+                    <div class="label">Часов</div>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-box">
+                    <div class="number" id="minutes">00</div>
+                    <div class="label">Минут</div>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-box">
+                    <div class="number" id="seconds">00</div>
+                    <div class="label">Секунд</div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Год завершён на:</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="year-stats">
+            <h2><i class="fas fa-chart-line"></i> Статистика года</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-code"></i></div>
+                    <div class="stat-value" id="code-lines">0</div>
+                    <div class="stat-label">Пар пережито(за последний семестр так как доступ был токо к этому семестру)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-mug-hot"></i></div>
+                    <div class="stat-value" id="coffee-cups">0</div>
+                    <div class="stat-label">чашек кофе выпито</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-bug"></i></div>
+                    <div class="stat-value" id="bugs-fixed">0</div>
+                    <div class="stat-label">багов исправлено</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-laugh-beam"></i></div>
+                    <div class="stat-value" id="memories">0</div>
+                    <div class="stat-label">воспоминаний создано</div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="fireworks-container" id="fireworks">
+            <!-- Здесь будут появляться фейерверки -->
+        </div>
+
+        <div class="message">
+            <p id="dynamic-message">Готовимся к празднику... 🎅</p>
+        </div>
+
+        <div class="footer">
+            <p>Сделано с  <i class="fas fa-heart"></i> для самой лучшей подруги</p>
+            <p class="hint">После отсчёта тебя ждёт сюрприз!(если не накосячу)</p>
+        </div>
+    </div>
+
+    <audio id="countdown-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="newyear-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-new-year-sound-2024-1135.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

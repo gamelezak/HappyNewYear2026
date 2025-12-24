@@ -1,0 +1,223 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const progressFill = document.getElementById('progress-fill');
+    const progressPercent = document.getElementById('progress-percent');
+    const dynamicMessage = document.getElementById('dynamic-message');
+    const fireworksContainer = document.getElementById('fireworks');
+    
+
+    const codeLinesEl = document.getElementById('code-lines');
+    const coffeeCupsEl = document.getElementById('coffee-cups');
+    const bugsFixedEl = document.getElementById('bugs-fixed');
+    const memoriesEl = document.getElementById('memories');
+    
+
+    const countdownSound = document.getElementById('countdown-sound');
+    const newyearSound = document.getElementById('newyear-sound');
+    
+    const newYearDate = new Date('January 1, 2026 00:00:00').getTime();
+    
+    const messages = [
+        { timeLeft: 30 * 24 * 60 * 60 * 1000, message: "Новый год уже близится^^" },
+        { timeLeft: 7 * 24 * 60 * 60 * 1000, message: "Уже через неделю! Пора готовить подарки! 🎁" },
+        { timeLeft: 24 * 60 * 60 * 1000, message: "Всего один день остался! Предвкушение зашкаливает! ✨" },
+        { timeLeft: 60 * 60 * 1000, message: "ПОЧТИ СОВСЕМ СКОРО! Последние приготовления! 🎉" },
+        { timeLeft: 10 * 60 * 1000, message: "Осталось всего десять минут!" },
+        { timeLeft: 60 * 1000, message: "ПОСЛЕДНЯЯ МИНУТА! Приготовься! ⏰" },
+        { timeLeft: 0, message: "С НОВЫМ 2025 ГОДОООМ! 🎊🎆🥳" }
+    ];
+    
+
+    function animateStats() {
+        animateValue(codeLinesEl, 0, 15432, 3000);
+        animateValue(coffeeCupsEl, 0, 428, 3000);
+        animateValue(bugsFixedEl, 0, 167, 3000);
+        animateValue(memoriesEl, 0, 89, 3000);
+    }
+    
+    function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            element.textContent = value.toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+    
+
+    function createFirework(x, y) {
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        firework.style.left = `${x}px`;
+        firework.style.top = `${y}px`;
+        fireworksContainer.appendChild(firework);
+        
+
+        const colors = ['#ff5e5e', '#f6b93b', '#78e08f', '#4a69bd', '#e55039'];
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 2 + Math.random() * 3;
+            const size = 3 + Math.random() * 5;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.borderRadius = '50%';
+            
+            firework.appendChild(particle);
+            
+     
+            const animation = particle.animate([
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { 
+                    transform: `translate(${Math.cos(angle) * velocity * 100}px, ${Math.sin(angle) * velocity * 100}px)`, 
+                    opacity: 0 
+                }
+            ], {
+                duration: 1000 + Math.random() * 500,
+                easing: 'cubic-bezier(0.1, 0.8, 0.9, 0.1)'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+        
+        setTimeout(() => {
+            firework.remove();
+        }, 1500);
+    }
+    
+
+    function startFireworks() {
+        fireworksContainer.style.opacity = '1';
+        
+
+        newyearSound.currentTime = 0;
+        newyearSound.play().catch(e => console.log("Автовоспроизведение звука заблокировано"));
+        
+
+        setTimeout(() => createFirework(window.innerWidth / 2, window.innerHeight / 2), 100);
+        
+  
+        const fireworkInterval = setInterval(() => {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createFirework(x, y);
+        }, 200);
+        
+  
+        setTimeout(() => {
+            clearInterval(fireworkInterval);
+            window.location.href = 'congrats.html';
+        }, 5000);
+    }
+    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const timeLeft = newYearDate - now;
+        
+
+        if (timeLeft <= 0) {
+            daysEl.textContent = '00';
+            hoursEl.textContent = '00';
+            minutesEl.textContent = '00';
+            secondsEl.textContent = '00';
+            progressFill.style.width = '100%';
+            progressPercent.textContent = '100%';
+            dynamicMessage.textContent = "С НОВЫМ 2025 ГОДОООМ! 🎊🎆🥳";
+            
+            if (!window.newYearStarted) {
+                window.newYearStarted = true;
+                startFireworks();
+            }
+            
+            return;
+        }
+        
+
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        
+
+        daysEl.textContent = days.toString().padStart(2, '0');
+        hoursEl.textContent = hours.toString().padStart(2, '0');
+        minutesEl.textContent = minutes.toString().padStart(2, '0');
+        secondsEl.textContent = seconds.toString().padStart(2, '0');
+        
+
+        secondsEl.style.animation = 'none';
+        setTimeout(() => {
+            secondsEl.style.animation = 'countdownPop 0.5s';
+        }, 10);
+        
+
+        const startOfYear = new Date('January 1, 2025 00:00:00').getTime();
+        const endOfYear = newYearDate;
+        const totalYearDuration = endOfYear - startOfYear;
+        const elapsedTime = now - startOfYear;
+        const progress = Math.min(Math.max((elapsedTime / totalYearDuration) * 100, 0), 100);
+        
+        progressFill.style.width = `${progress}%`;
+        progressPercent.textContent = `${progress.toFixed(1)}%`;
+        
+
+        updateMessage(timeLeft);
+        
+  
+        if (timeLeft < 11000 && timeLeft > 0 && seconds % 1 === 0) {
+            countdownSound.currentTime = 0;
+            countdownSound.play().catch(e => console.log("Автовоспроизведение звука заблокировано"));
+        }
+    }
+    
+
+    function updateMessage(timeLeft) {
+        for (let i = 0; i < messages.length; i++) {
+            if (timeLeft <= messages[i].timeLeft && timeLeft > messages[i+1].timeLeft  ) {
+                dynamicMessage.textContent = messages[i].message;
+                break;
+            }
+        }
+    }
+    
+
+    function init() {
+        animateStats();
+        updateCountdown();
+        
+
+        setInterval(updateCountdown, 1000);
+        
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .firework {
+                position: absolute;
+                pointer-events: none;
+                z-index: 1000;
+            }
+            .particle {
+                position: absolute;
+                pointer-events: none;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+
+    init();
+});

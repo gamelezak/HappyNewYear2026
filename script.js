@@ -136,8 +136,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const now = new Date().getTime();
         const timeLeft = newYearDate - now;
         const fourDays = 4 * 24 * 60 * 60 * 1000;
+        const sixDays = 5 * 24 * 60 * 60 * 1000;
         const messageForm = document.getElementById('message-form');
+        const body = document.querySelector('body');
+        const progbar = document.querySelector('.progress-fill');
+        const numbers = document.getElementsByClassName('number');
+        const separators = document.getElementsByClassName('separator');
+        const header = document.querySelector('.header h1')
+        const text = document.querySelector('.text');
+        if (timeLeft <= sixDays){
+            for (let i = 0; i < numbers.length; i++) {
+                numbers[i].style.color = '#3bf6ceff'
+                numbers[i].style.textShadow = '0 0 10px rgba(59, 246, 196, 0.5)'
 
+            }
+
+            for (i = 0; i < separators.length; i++) {
+                separators[i].style.color = '#3bf6ceff'
+            }
+            text.style.color = '#3bf6f0ff'
+            header.style.color = '#3bf6f0ff'
+            body.style.background = 'linear-gradient(135deg, #0c1761ff, #1e3099ff, #4a8dbdff)';
+            progbar.style.background = 'linear-gradient(90deg, #f3f63bff, #e55939ff)'
+        }
         if (timeLeft <= fourDays) {
             messageForm.style.display = 'block';
         }

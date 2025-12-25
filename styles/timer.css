@@ -312,3 +312,64 @@ body::before {
         font-size: 2rem;
     }
 }
+.show{
+    display: block;
+}
+#message-form{
+    display: none;
+}
+ #bg-submit{
+    height: 50px;
+    width: 100px;
+    border-radius: 25px;
+    outline: none;
+    background-color: rgba(81, 82, 82, 0.3);
+ }
+ #bg-input{
+    text-indent: 25px;
+    font-size: 1.75rem;
+    color: rgba(0, 0, 0, 0.2);
+    width: 400px;
+    height: 49px;
+    outline: none;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 0.5);  
+ }
+.bg-message {
+  position: absolute;
+  top: -50px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #fff;
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.8),
+    0 0 16px rgba(255,200,100,0.6);
+  opacity: 0;
+  animation:
+    fadeIn 2s forwards,
+    snowFall 12s linear forwards,
+    sway 4s ease-in-out infinite;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  to { opacity: 0.9; }
+}
+
+@keyframes snowFall {
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+@keyframes sway {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(20px); }
+  100% { transform: translateX(0); }
+}
+
+.bg-message {
+  filter: blur(0.2px);
+}

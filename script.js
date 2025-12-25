@@ -18,17 +18,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const countdownSound = document.getElementById('countdown-sound');
     const newyearSound = document.getElementById('newyear-sound');
     
-    const newYearDate = new Date('January 1, 2026 00:00:00').getTime();
+    const newYearDate = new Date('December 30, 2025 00:00:00').getTime();
     
+
+
+
     const messages = [
         { timeLeft: 30 * 24 * 60 * 60 * 1000, message: "Новый год уже близится^^" },
-        { timeLeft: 7 * 24 * 60 * 60 * 1000, message: "Уже через неделю! Пора готовить подарки! 🎁" },
+        { timeLeft: 7 * 24 * 60 * 60 * 1000, message: "Уже через неделю! Пора готовиться к  празднику! 🎁" },
+        { timeLeft: 6 * 24 * 60 * 60 * 1000, message: "Осталось 6 дней! Успей  завершить все дела в этом году чтобы войти в новый год с выполненными делами^^" },
+        { timeLeft: 5 * 24 * 60 * 60 * 1000, message: "Уже осталось 5 дней! Не забывай кушать^^" },
+        { timeLeft: 4 * 24 * 60 * 60 * 1000, message: "Осталось всего 4 дня!Чем планируешь сегодня занятся?" },
         { timeLeft: 24 * 60 * 60 * 1000, message: "Всего один день остался! Предвкушение зашкаливает! ✨" },
         { timeLeft: 60 * 60 * 1000, message: "ПОЧТИ СОВСЕМ СКОРО! Последние приготовления! 🎉" },
         { timeLeft: 10 * 60 * 1000, message: "Осталось всего десять минут!" },
         { timeLeft: 60 * 1000, message: "ПОСЛЕДНЯЯ МИНУТА! Приготовься! ⏰" },
         { timeLeft: 0, message: "С НОВЫМ 2025 ГОДОООМ! 🎊🎆🥳" }
     ];
+    
+
     
 
     function animateStats() {
@@ -127,7 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateCountdown() {
         const now = new Date().getTime();
         const timeLeft = newYearDate - now;
-        
+        const fourDays = 4 * 24 * 60 * 60 * 1000;
+        const messageForm = document.getElementById('message-form');
+
+        if (timeLeft <= fourDays) {
+            messageForm.style.display = 'block';
+        }
 
         if (timeLeft <= 0) {
             daysEl.textContent = '00';
@@ -195,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 
+
     function init() {
         animateStats();
         updateCountdown();
@@ -202,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setInterval(updateCountdown, 1000);
         
-
+        loadBgMessages();
         const style = document.createElement('style');
         style.textContent = `
             .firework {

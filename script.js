@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const countdownSound = document.getElementById('countdown-sound');
     const newyearSound = document.getElementById('newyear-sound');
     
-    const newYearDate = new Date('December 30, 2025 00:00:00').getTime();
+    const newYearDate = new Date('January 1, 2026 00:00:00').getTime();
     
 
 

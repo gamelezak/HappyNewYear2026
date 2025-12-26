@@ -338,39 +338,109 @@ body::before {
  }
 .bg-message {
   position: absolute;
-  top: -50px;
-  font-size: 22px;
-  font-weight: 500;
-  color: #fff;
-  text-shadow:
-    0 0 8px rgba(255,255,255,0.8),
-    0 0 16px rgba(255,200,100,0.6);
-  opacity: 0;
-  animation:
-    fadeIn 2s forwards,
-    snowFall 12s linear forwards,
-    sway 4s ease-in-out infinite;
+  top: 45%;
+  font-size: 26px;
+  font-weight: 600;
   white-space: nowrap;
   pointer-events: none;
-}
 
-@keyframes fadeIn {
-  to { opacity: 0.9; }
-}
+  color: #e6fbff;
 
-@keyframes snowFall {
+  text-shadow:
+    0 0 8px #7fdfff,
+    0 0 18px rgba(0, 200, 255, 0.7);
+
+  will-change: transform, opacity;
+
+  animation:
+    iceAppear 0.9s cubic-bezier(.2,.8,.2,1) forwards,
+    iceDrift 8s ease-in-out infinite,
+    iceGlow 3s ease-in-out infinite,
+    iceFadeOut 2.5s ease-in forwards;
+
+  animation-delay:
+    0s,
+    0s,
+    0s,
+    6.5s; /* ⏳ когда начинать исчезновение */
+}
+@keyframes iceFadeOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
   to {
-    transform: translateY(110vh);
     opacity: 0;
+    filter: blur(2px);
   }
 }
 
-@keyframes sway {
-  0%   { transform: translateX(0); }
-  50%  { transform: translateX(20px); }
-  100% { transform: translateX(0); }
+
+/* треск — микродрожь */
+@keyframes iceAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateX(0);
+    text-shadow: 0 0 0 transparent;
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.02) translateX(-1px);
+  }
+  60% {
+    transform: scale(0.98) translateX(1px);
+  }
+  80% {
+    transform: scale(1.01) translateX(-0.5px);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+  }
 }
 
-.bg-message {
-  filter: blur(0.2px);
+/* медленное парение */
+@keyframes iceDrift {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* холодное свечение */
+@keyframes iceGlow {
+  0%,100% {
+    text-shadow:
+      0 0 8px #7fdfff,
+      0 0 18px rgba(0, 200, 255, 0.6);
+  }
+  50% {
+    text-shadow:
+      0 0 14px #cfffff,
+      0 0 30px rgba(0, 220, 255, 0.9);
+  }
+}
+.ice-crystal {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(135deg, #e6fbff, #7fdfff);
+  transform: rotate(45deg);
+  opacity: 0.9;
+  pointer-events: none;
+
+  filter: drop-shadow(0 0 6px #7fdfff);
+
+  animation:
+    crystalFly 1.6s ease-out forwards,
+    crystalFade 1.6s ease-in forwards;
+}
+
+@keyframes crystalFade {
+  to { opacity: 0; }
+}
+
+
+@keyframes crystalFly {
+  to {
+    transform: translate(var(--x), var(--y)) rotate(45deg) scale(0.2);
+    opacity: 0;
+  }
 }

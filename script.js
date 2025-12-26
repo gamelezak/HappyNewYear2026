@@ -8,21 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const dynamicMessage = document.getElementById('dynamic-message');
     const fireworksContainer = document.getElementById('fireworks');
     
-
     const codeLinesEl = document.getElementById('code-lines');
     const coffeeCupsEl = document.getElementById('coffee-cups');
     const bugsFixedEl = document.getElementById('bugs-fixed');
     const memoriesEl = document.getElementById('memories');
-    
 
     const countdownSound = document.getElementById('countdown-sound');
     const newyearSound = document.getElementById('newyear-sound');
     
     const newYearDate = new Date('January 1, 2026 00:00:00').getTime();
     
-
-
-
     const messages = [
         { timeLeft: 30 * 24 * 60 * 60 * 1000, message: "Новый год уже близится^^" },
         { timeLeft: 7 * 24 * 60 * 60 * 1000, message: "Уже через неделю! Пора готовиться к  празднику! 🎁" },
@@ -36,9 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         { timeLeft: 0, message: "С НОВЫМ 2025 ГОДОООМ! 🎊🎆🥳" }
     ];
     
-
-    
-
     function animateStats() {
         animateValue(codeLinesEl, 0, 15432, 3000);
         animateValue(coffeeCupsEl, 0, 428, 3000);
@@ -59,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         window.requestAnimationFrame(step);
     }
-    
 
     function createFirework(x, y) {
         const firework = document.createElement('div');
@@ -204,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalYearDuration = endOfYear - startOfYear;
         const elapsedTime = now - startOfYear;
         const progress = Math.min(Math.max((elapsedTime / totalYearDuration) * 100, 0), 100);
-        
+    
         progressFill.style.width = `${progress}%`;
         progressPercent.textContent = `${progress.toFixed(1)}%`;
         

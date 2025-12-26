@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const now = new Date().getTime();
         const timeLeft = newYearDate - now;
         const fourDays = 4 * 24 * 60 * 60 * 1000;
-        const sixDays = 5 * 24 * 60 * 60 * 1000;
+        const sixDays = 6 * 24 * 60 * 60 * 1000;
         const messageForm = document.getElementById('message-form');
         const body = document.querySelector('body');
         const progbar = document.querySelector('.progress-fill');

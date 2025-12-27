@@ -144,8 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fiveDays = 5 * 24 * 60 * 60 * 1000;
         if(timeLeft <= fiveDays){
             window.addEventListener('resize', resize);
-resize();
-
+            resize();
             render(0);
             
             

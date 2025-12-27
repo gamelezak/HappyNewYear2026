@@ -313,7 +313,7 @@ body::before {
         font-size: 2rem;
     }
 }
-.show{
+#message-form.show{
     display: flex;
 }
 
@@ -499,3 +499,161 @@ body::before {
 }
 
 
+/* ===== КОНТЕЙНЕР ===== */
+.gift {
+    position: relative;
+    width: 120px;
+    height: 150px;
+    margin: 40px auto;
+    cursor: pointer;
+}
+
+/* ===== КОРОБКА ===== */
+.gift-box {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(135deg, #e63946, #c1121f);
+    border-radius: 0 0 14px 14px;
+    overflow: hidden;
+}
+
+/* ===== ЛЕНТЫ ===== */
+.ribbon-v {
+    position: absolute;
+    width: 18px;
+    height: 100%;
+    background: linear-gradient(#ffd166, #fcbf49);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.ribbon-h {
+    position: absolute;
+    height: 18px;
+    background: linear-gradient(#ffd166, #fcbf49);
+    top: 30px;
+    z-index: 1;
+}
+
+.ribbon-h.left {
+    left: 0;
+    width: calc(50% - 9px);
+}
+
+.ribbon-h.right {
+    right: 0;
+    width: calc(50% - 9px);
+}
+
+/* ===== КРЫШКА ===== */
+.gift-lid {
+    position: absolute;
+    top: 35px;              /* ← КЛЮЧЕВО */
+    left: -5%;
+    width: 110%;
+    height: 30px;
+    background: linear-gradient(135deg, #f77f00, #e85d04);
+    border-radius: 14px;
+    transform-origin: left bottom;
+    transition: transform 0.4s ease;
+    z-index: 5;
+}
+
+/* ===== ТЕКСТ ===== */
+.gift-text {
+    position: absolute;
+    top: 0;
+    width: 220px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+/* ===== ОТКРЫТИЕ ===== */
+.gift.open .gift-lid {
+    transform: rotate(-40deg) translateY(-5px);
+}
+
+.gift.open .gift-text {
+    transform: translateX(-50%) scale(1);
+}
+/* Затемнение фона */
+.letter-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 40, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+/* Активное состояние */
+.letter-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Само письмо */
+.letter {
+    position: relative;
+    width: 320px;
+    max-width: 90%;
+    padding: 25px 20px;
+    background: linear-gradient(180deg, #fffdf7, #f1efe9);
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    text-align: center;
+    animation: letterPop 0.35s ease;
+}
+
+.letter h2 {
+    margin: 0 0 10px;
+    color: #c1121f;
+}
+
+.letter p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+}
+
+/* Крестик */
+.letter-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #999;
+}
+
+.letter-close:hover {
+    color: #c1121f;
+}
+
+/* Анимация */
+@keyframes letterPop {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

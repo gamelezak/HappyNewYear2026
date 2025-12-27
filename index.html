@@ -18,6 +18,7 @@
             <h1><i class="fas fa-snowflake"></i> До Нового 2026 Года осталось:</h1>
             <p class="subtitle">Этот год был не лёгким, но давай встретим новый с улыбками на лицах=)</p>
         </div>
+        
 
         <div class="countdown-container">
             <div class="countdown">
@@ -56,6 +57,18 @@
     <input id="bg-input" maxlength="80" placeholder="Сообщение...(максимум 2)">
     <button id="bg-submit">OK</button>
 </div></center>
+
+<div class="gift" id="gift">
+    <div class="gift-lid"></div>
+
+    <div class="gift-box">
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h left"></div>
+        <div class="ribbon-h right"></div>
+    </div>
+
+    <div class="gift-text"></div>
+</div>
 
 
 
@@ -239,6 +252,40 @@ btn.onclick = async () => {
     
     <script src="script.js" type="module"></script>
     
+<!-- Письмо -->
+<div class="letter-overlay" id="letter">
+    <div class="letter">
+        <button class="letter-close" id="letterClose">×</button>
+        <h2>Прелестному ангелочку</h2>
+        <p>
+            Пусть каждый твой день будет наполнен счастьем и удачей, 
+            желаю тебе поскорее найти твои наушннички и чтобы с зубиками всё стало хорошо 
+            <br>Спасибо, что ты здесь❤️
+        </p>
+    </div>
+</div>
+<script>
+const gift = document.getElementById('gift');
+const letter = document.getElementById('letter');
+const letterClose = document.getElementById('letterClose');
 
+gift.addEventListener('click', () => {
+    gift.classList.add('open');
+    setTimeout(() => {
+        letter.classList.add('show');
+    }, 400); // после анимации крышки
+});
+
+letterClose.addEventListener('click', () => {
+    letter.classList.remove('show');
+});
+
+// опционально — закрытие по клику на фон
+letter.addEventListener('click', (e) => {
+    if (e.target === letter) {
+        letter.classList.remove('show');
+    }
+});
+</script>
 </body>
 </html>

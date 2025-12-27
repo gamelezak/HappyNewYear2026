@@ -1,4 +1,7 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
+    
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
@@ -30,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         { timeLeft: 60 * 1000, message: "ПОСЛЕДНЯЯ МИНУТА! Приготовься! ⏰" },
         { timeLeft: 0, message: "С НОВЫМ 2025 ГОДОООМ! 🎊🎆🥳" }
     ];
+        const garlandWrap = document.getElementById('garland-svg');
     
     function animateStats() {
         animateValue(codeLinesEl, 0, 15432, 3000);
@@ -37,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
         animateValue(bugsFixedEl, 0, 167, 3000);
         animateValue(memoriesEl, 0, 89, 3000);
     }
+
+
     
     function animateValue(element, start, end, duration) {
         let startTimestamp = null;
@@ -135,6 +141,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const separators = document.getElementsByClassName('separator');
         const header = document.querySelector('.header h1')
         const text = document.querySelector('.text');
+        const fiveDays = 5 * 24 * 60 * 60 * 1000;
+        if(timeLeft <= fiveDays){
+            window.addEventListener('resize', resize);
+resize();
+
+            render(0);
+            
+            
+
+
+        }
         if (timeLeft <= sixDays){
             for (let i = 0; i < numbers.length; i++) {
                 numbers[i].style.color = '#3bf6ceff'
@@ -142,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             }
 
-            for (i = 0; i < separators.length; i++) {
+            for (let i = 0; i < separators.length; i++) {
                 separators[i].style.color = '#3bf6ceff'
             }
             text.style.color = '#3bf6f0ff'
@@ -221,6 +238,114 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
 
+    
+/* ❄️ WEBGL СНЕГ — БЕЗ СКАЧКОВ ❄️ */
+const canvas = document.getElementById('snow');
+const gl = canvas.getContext('webgl', { alpha: true });
+
+if (!gl) {
+    console.warn('WebGL не поддерживается');
+    return;
+}
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+}
+
+
+
+const vertexSrc = `
+attribute float a_id;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+float rand(float n) {
+    return fract(sin(n) * 43758.5453123);
+}
+
+void main() {
+    float id = a_id;
+
+    float x = rand(id) * u_resolution.x;
+    float speed = 20.0 + rand(id + 1.0) * 30.0;
+    float drift = rand(id + 2.0) * 40.0;
+
+    float y = mod(
+        u_resolution.y - (u_time * speed) + rand(id + 3.0) * u_resolution.y,
+        u_resolution.y
+    );
+
+    float dx = sin(u_time * 0.2 + id) * drift;
+
+    vec2 pos = vec2(x + dx, y);
+    vec2 clip = (pos / u_resolution) * 2.0 - 1.0;
+    clip.y *= 1.0;
+
+    gl_Position = vec4(clip, 0.0, 1.0);
+    gl_PointSize = 1.5 + rand(id + 4.0) * 2.5;
+}
+`;
+
+const fragmentSrc = `
+precision mediump float;
+
+void main() {
+    float d = length(gl_PointCoord - 0.5);
+    float alpha = smoothstep(0.5, 0.0, d);
+    gl_FragColor = vec4(1.0, 1.0, 1.0, alpha * 0.8);
+}
+`;
+
+function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+}
+
+const vs = compile(gl.VERTEX_SHADER, vertexSrc);
+const fs = compile(gl.FRAGMENT_SHADER, fragmentSrc);
+
+const program = gl.createProgram();
+gl.attachShader(program, vs);
+gl.attachShader(program, fs);
+gl.linkProgram(program);
+gl.useProgram(program);
+
+
+const COUNT = 1200;
+const ids = new Float32Array(COUNT);
+for (let i = 0; i < COUNT; i++) ids[i] = i;
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, ids, gl.STATIC_DRAW);
+
+const a_id = gl.getAttribLocation(program, 'a_id');
+gl.enableVertexAttribArray(a_id);
+gl.vertexAttribPointer(a_id, 1, gl.FLOAT, false, 0, 0);
+
+const u_time = gl.getUniformLocation(program, 'u_time');
+const u_resolution = gl.getUniformLocation(program, 'u_resolution');
+
+function render(time) {
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(u_time, time * 0.001);
+    gl.uniform2f(u_resolution, canvas.width, canvas.height);
+    gl.drawArrays(gl.POINTS, 0, COUNT);
+    requestAnimationFrame(render);
+}
+
+
+
+
+
+
+   
+
+
     function init() {
         animateStats();
         updateCountdown();
@@ -228,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setInterval(updateCountdown, 1000);
         
-        loadBgMessages();
+
         const style = document.createElement('style');
         style.textContent = `
             .firework {

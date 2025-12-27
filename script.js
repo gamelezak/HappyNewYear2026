@@ -239,22 +239,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 /* ❄️ WEBGL СНЕГ — БЕЗ СКАЧКОВ ❄️ */
+/* ❄️ WEBGL СНЕГ — DESKTOP + MOBILE ❄️ */
 const canvas = document.getElementById('snow');
-const gl = canvas.getContext('webgl', { alpha: true });
+const gl = canvas.getContext('webgl', { alpha: true, antialias: false });
 
 if (!gl) {
     console.warn('WebGL не поддерживается');
     return;
 }
 
+/* ===== DEVICE DETECT ===== */
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+
+/* ===== RESIZE ===== */
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    canvas.width = window.innerWidth * DPR;
+    canvas.height = window.innerHeight * DPR;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    gl.viewport(0, 0, canvas.width, canvas.height);
 }
+window.addEventListener('resize', resize);
+resize();
 
-
-
+/* ===== SHADERS ===== */
 const vertexSrc = `
 attribute float a_id;
 uniform float u_time;
@@ -268,24 +277,24 @@ void main() {
     float id = a_id;
 
     float x = rand(id) * u_resolution.x;
-    float speed = 20.0 + rand(id + 1.0) * 30.0;
-    float drift = rand(id + 2.0) * 40.0;
+    float speed = 15.0 + rand(id + 1.0) * 25.0;
+    float drift = rand(id + 2.0) * 30.0;
 
     float y = mod(
         u_resolution.y - (u_time * speed) + rand(id + 3.0) * u_resolution.y,
         u_resolution.y
     );
 
-    float dx = sin(u_time * 0.2 + id) * drift;
+    float dx = sin(u_time * 0.15 + id) * drift;
 
     vec2 pos = vec2(x + dx, y);
     vec2 clip = (pos / u_resolution) * 2.0 - 1.0;
-    clip.y *= 1.0;
+    clip.y *= -1.0;
 
     gl_Position = vec4(clip, 0.0, 1.0);
-    gl_PointSize = 1.5 + rand(id + 4.0) * 2.5;
+    gl_PointSize = (isMobile ? 2.5 : 1.5) + rand(id + 4.0) * (isMobile ? 2.5 : 2.0);
 }
-`;
+`.replace(/isMobile/g, isMobile ? 'true' : 'false');
 
 const fragmentSrc = `
 precision mediump float;
@@ -293,7 +302,7 @@ precision mediump float;
 void main() {
     float d = length(gl_PointCoord - 0.5);
     float alpha = smoothstep(0.5, 0.0, d);
-    gl_FragColor = vec4(1.0, 1.0, 1.0, alpha * 0.8);
+    gl_FragColor = vec4(1.0, 1.0, 1.0, alpha * 0.75);
 }
 `;
 
@@ -313,8 +322,9 @@ gl.attachShader(program, fs);
 gl.linkProgram(program);
 gl.useProgram(program);
 
+/* ===== PARTICLES COUNT ===== */
+const COUNT = isMobile ? 600 : 1200;
 
-const COUNT = 1200;
 const ids = new Float32Array(COUNT);
 for (let i = 0; i < COUNT; i++) ids[i] = i;
 
@@ -329,6 +339,7 @@ gl.vertexAttribPointer(a_id, 1, gl.FLOAT, false, 0, 0);
 const u_time = gl.getUniformLocation(program, 'u_time');
 const u_resolution = gl.getUniformLocation(program, 'u_resolution');
 
+/* ===== RENDER ===== */
 function render(time) {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniform1f(u_time, time * 0.001);
@@ -336,6 +347,9 @@ function render(time) {
     gl.drawArrays(gl.POINTS, 0, COUNT);
     requestAnimationFrame(render);
 }
+
+render(0);
+
 
 
 

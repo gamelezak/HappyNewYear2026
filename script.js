@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         { timeLeft: 60 * 1000, message: "ПОСЛЕДНЯЯ МИНУТА! Приготовься! ⏰" },
         { timeLeft: 0, message: "С НОВЫМ 2025 ГОДОООМ! 🎊🎆🥳" }
     ];
-        const garlandWrap = document.getElementById('garland-svg');
+
     
     function animateStats() {
         animateValue(codeLinesEl, 0, 15432, 3000);

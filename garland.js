@@ -9,7 +9,7 @@ const colors = ['#ff6b6b','#ffd93d','#6bff95','#6bd4ff','#c77dff'];
 
 function isMoscowNight() {
   const h = (new Date().getUTCHours() + 3) % 24;
-  return h >= 9 || h < 8;
+  return h >= 18 || h < 8;
 }
 
 // состояние тумблера

@@ -372,6 +372,52 @@ body::before {
     box-shadow: 0 3px 8px rgba(225, 57, 70, 0.6);
 }
 
+@media (max-width: 480px) {
+  .bg-message {
+    font-size: 14px;
+    padding: 6px 10px;
+    max-width: 80vw;
+    text-align: center;
+  }
+
+  #background-messages {
+    overflow: hidden;
+  }
+}
+.bg-message {
+  max-width: min(90vw, 320px);   /* зависит от экрана */
+  padding: 6px 10px;
+
+  white-space: normal;          /* разрешаем перенос */
+  word-wrap: break-word;        /* старые браузеры */
+  overflow-wrap: anywhere;      /* современные */
+  word-break: break-word;       /* длинные слова */
+
+  line-height: 1.3;
+  text-align: center;
+  box-sizing: border-box;
+}
+@media (max-width: 480px) {
+  .bg-message {
+    max-width: 90vw;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .bg-message {
+    max-width: 70vw;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 769px) {
+  .bg-message {
+    max-width: 320px;
+    font-size: 16px;
+  }
+}
+
 /* контейнер */
 #background-messages {
   position: fixed;
@@ -656,4 +702,63 @@ body::before {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+#garland {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+#garland svg {
+  width: 100%;
+  height: 120px;
+}
+
+#wirePath {
+  fill: none;
+  stroke: #1e1e1e;
+  stroke-width: 4;
+}
+
+.light {
+  position: absolute;
+  width: 16px;
+  height: 20px;
+  border-radius: 50% 50% 45% 45%;
+  transform: translate(-50%, 0);
+  filter: blur(0.2px);
+}
+
+.light::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: #444;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+/* тумблер */
+#garlandToggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  font-size: 20px;
+  padding: 8px 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: #111;
+  color: #fff;
 }

@@ -28,7 +28,11 @@ function updateVisibility() {
 function createLights() {
   lightsBox.innerHTML = '';
 
-  const count = window.innerWidth < 600 ? 18 : 28;
+ const count =
+  window.innerWidth < 480 ? 10 :
+  window.innerWidth < 768 ? 14 :
+  26;
+
   const length = path.getTotalLength();
   const rect = svg.getBoundingClientRect();
 
@@ -49,8 +53,13 @@ function createLights() {
 
     // мягкое мерцание (один интервал — без утечек)
     setInterval(() => {
-      light.style.opacity = Math.random() > 0.3 ? '1' : '0.5';
-    }, 900 + Math.random() * 1200);
+  document.querySelectorAll('.light').forEach(light => {
+    const on = Math.random() > 0.25;
+    light.style.opacity = on ? '1' : '0.35';
+    light.style.transitionDuration = `${1 + Math.random()}s`;
+
+  });
+}, 1600);
 
     lightsBox.appendChild(light);
   }

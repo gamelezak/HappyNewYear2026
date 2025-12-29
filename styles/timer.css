@@ -734,6 +734,7 @@ body::before {
   border-radius: 50% 50% 45% 45%;
   transform: translate(-50%, 0);
   filter: blur(0.2px);
+  transition: opacity 1.2s ease-in-out, box-shadow 1.2s ease-in-out;
 }
 
 .light::after {

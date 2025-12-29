@@ -9,23 +9,33 @@ import {
   remove
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
+/* ===== 🔐 админ ТОЛЬКО по URL ===== */
+const params = new URLSearchParams(window.location.search);
+const isAdmin = params.get('admin') === '1';
 
+if (isAdmin) {
+  const badge = document.getElementById('admin-indicator');
+  if (badge) badge.textContent = 'ADMIN MODE';
+}
+
+/* ===== Firebase ===== */
 const firebaseConfig = {
-   apiKey: "AIzaSyBV01cQyq-INnrFkvrNVCTcqgtvGzbC9Pw",
-   authDomain: "words-6eef3.firebaseapp.com",
-   databaseURL: "https://words-6eef3-default-rtdb.europe-west1.firebasedatabase.app",
-   projectId: "words-6eef3",
- };
+  apiKey: "AIzaSyBV01cQyq-INnrFkvrNVCTcqgtvGzbC9Pw",
+  authDomain: "words-6eef3.firebaseapp.com",
+  databaseURL: "https://words-6eef3-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "words-6eef3",
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const messagesRef = ref(db, 'messages');
 
-
+/* ===== DOM ===== */
 const input = document.getElementById('bg-input');
 const btn = document.getElementById('bg-submit');
 const container = document.getElementById('background-messages');
 
-
+/* ===== слоты ===== */
 function getSlots() {
   if (window.innerWidth <= 480) {
     return [20, 40, 60];   // телефон
@@ -44,14 +54,14 @@ window.addEventListener('resize', () => {
 
 const elements = new Map();
 
-
+/* ===== 🌬 ветер ===== */
 function wind() {
   container.classList.remove('wind');
   void container.offsetHeight;
   container.classList.add('wind');
 }
 
-
+/* ===== ✨ искры ===== */
 function explodeIce(el) {
   if (window.innerWidth <= 480) return; // ❗ отключаем на телефонах
 
@@ -76,22 +86,25 @@ function explodeIce(el) {
   }
 }
 
-
-
-function spawnMessage(key, text) {
+/* ===== создать сообщение ===== */
+function spawnMessage(key, msg) {
   const div = document.createElement('div');
   div.className = 'bg-message';
-  div.textContent = text;
+  div.textContent = msg.text;
+
+  // 🟢 админ-сообщение
+  if (msg.admin) {
+    div.classList.add('admin');
+  }
 
   container.appendChild(div);
 
-  // --- вычисляем безопасные координаты ---
+  // безопасная горизонталь
   const cw = container.clientWidth;
   const mw = div.offsetWidth;
 
-  const minX = 8;                 // отступ от края
-  const maxX = cw - mw - 8;        // ❗ не даём выйти за экран
-
+  const minX = 8;
+  const maxX = cw - mw - 8;
   const x = Math.random() * (maxX - minX) + minX;
 
   const index = elements.size % SLOTS.length;
@@ -102,8 +115,7 @@ function spawnMessage(key, text) {
   wind();
 }
 
-
-
+/* ===== удалить сообщение ===== */
 function removeMessage(key) {
   const el = elements.get(key);
   if (!el) return;
@@ -116,22 +128,25 @@ function removeMessage(key) {
   }, 1800);
 }
 
-
+/* ===== realtime ===== */
 onChildAdded(messagesRef, snap => {
-  spawnMessage(snap.key, snap.val().text);
+  spawnMessage(snap.key, snap.val());
 });
-
 
 onChildRemoved(messagesRef, snap => {
   removeMessage(snap.key);
 });
 
-
+/* ===== отправка ===== */
 btn.onclick = async () => {
   const text = input.value.trim();
   if (!text) return;
 
-  await push(messagesRef, { text, time: Date.now() });
+  await push(messagesRef, {
+    text,
+    time: Date.now(),
+    admin: isAdmin // 🔐 только по URL
+  });
 
   const snap = await get(messagesRef);
   const data = snap.val();
@@ -143,7 +158,9 @@ btn.onclick = async () => {
   if (entries.length > 2) {
     entries
       .slice(0, entries.length - 2)
-      .forEach(([key]) => remove(ref(db, 'messages/' + key)));
+      .forEach(([key]) =>
+        remove(ref(db, 'messages/' + key))
+      );
   }
 
   input.value = '';

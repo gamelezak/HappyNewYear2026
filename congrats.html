@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>С Новым Годом</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: 'Playfair Display', serif;
+      transition: background 3s ease;
+    }
+
+    body.final-bg {
+      background: radial-gradient(circle at top, #2a220f, #000);
+    }
+
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 900px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .text {
+      min-height: 3em;
+      animation: breathe 7s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+
+    /* ===== ЗОЛОТО ===== */
+    .gold {
+      background: linear-gradient(
+        120deg,
+        #8b6a1e,
+        #ffd700,
+        #fff4b0,
+        #ffd700,
+        #8b6a1e
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: goldShine 8s ease-in-out infinite;
+      text-shadow:
+        0 0 6px rgba(255, 215, 120, 0.35),
+        0 0 14px rgba(255, 200, 80, 0.25);
+      -webkit-text-stroke: 0.5px rgba(255, 215, 140, 0.35);
+    }
+
+    @keyframes goldShine {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .title {
+      font-size: 72px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      font-size: 34px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    /* ===== БУКВЫ ===== */
+    .word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .space {
+      display: inline-block;
+      width: 0.4em;
+    }
+
+    .char {
+      opacity: 0;
+      display: inline-block;
+      transform: translateY(10px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .char.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== КНОПКА ЗВУКА ===== */
+    .sound-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 14px;
+      color: gold;
+      border: 1px solid rgba(255,215,120,.4);
+      padding: 8px 12px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity .3s;
+    }
+
+    .sound-btn:hover {
+      opacity: 1;
+    }
+
+    /* ===== ФИНАЛ ===== */
+    .final {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .final img {
+      max-width: 340px;
+      border-radius: 18px;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
+    }
+
+    .final a {
+      font-size: 24px;
+      color: gold;
+      text-decoration: none;
+      border-bottom: 1px solid gold;
+    }
+
+    .signature {
+      margin-top: 20px;
+      font-size: 18px;
+      opacity: 0.6;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ===== МОБИЛЬНАЯ ===== */
+    @media (max-width: 768px) {
+      .title { font-size: 42px; }
+      .message { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+  <div id="text" class="text gold"></div>
+
+  <div id="final" class="final">
+    <img src="https://via.placeholder.com/340x230.png?text=Happy+New+Year">
+    <a href="https://example.com" target="_blank">Перейти по ссылке</a>
+    <div class="signature gold">С теплом от тебя · 2025</div>
+  </div>
+</div>
+
+<div class="sound-btn" id="soundBtn"></div>
+
+<audio id="audio" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4f0a6c1b66.mp3">
+</audio>
+
+<script>
+  /* ===== ВИБРАЦИЯ ===== */
+  const vibrate = () => navigator.vibrate && navigator.vibrate(20);
+
+  /* ===== ЗВУК ===== */
+  const audio = document.getElementById("audio");
+  document.getElementById("soundBtn").onclick = () => {
+    audio.paused ? audio.play() : audio.pause();
+  };
+
+  /* ===== ФОН ===== */
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+
+  function resize() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+  }
+  addEventListener("resize", resize);
+  resize();
+
+  const particles = Array.from({ length: 100 }, () => ({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*2+0.5,
+    s: Math.random()*0.2+0.05,
+    star: Math.random() < 0.02
+  }));
+
+  (function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      ctx.fillStyle = "rgba(255,215,120,.6)";
+      if (p.star) {
+        ctx.fillText("✦", p.x, p.y);
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+      }
+      p.y -= p.s;
+      if (p.y < -10) {
+        p.y = canvas.height + 10;
+        p.x = Math.random()*canvas.width;
+      }
+    });
+    requestAnimationFrame(draw);
+  })();
+
+  /* ===== ТЕКСТ ===== */
+  const messages = [
+    { text: "С Новым Годом!!!", class: "title" },
+    { text: "Пусть этот год принесёт много счастья, тепла и радости", class: "message" },
+    { text: "Пусть мечты находят путь к исполнению", class: "message" },
+    { text: "Пусть рядом всегда будут близкие", class: "message" },
+    { text: "Пусть каждый новый день приносит больше счастливых моментов", class: "message" },
+    { text: "Желаю здоровья тебе и твоим близким,", class: "message" },
+    { text: "Чтобы тебе всегда сопуствовала удача,", class: "message" },
+    { text: "И чтобы ты чаще улыбалась, ведь улыбка тебе очень идёт^^", class: "message" },
+    { text: "Счастливого нового года солнышко^^", class: "title" },
+    { text: "", class: "title" },
+  ];
+
+  const textEl = document.getElementById("text");
+  const finalEl = document.getElementById("final");
+  let index = 0;
+
+  function showMessage() {
+    if (index === 0) setTimeout(start, 1200);
+    else start();
+  }
+
+  function start() {
+    textEl.innerHTML = "";
+    textEl.className = `text gold ${messages[index].class}`;
+    vibrate();
+
+    let delay = 0;
+    messages[index].text.split(" ").forEach((word, w) => {
+      const wordEl = document.createElement("span");
+      wordEl.className = "word";
+      [...word].forEach(l => {
+        const c = document.createElement("span");
+        c.className = "char";
+        c.textContent = l;
+        wordEl.appendChild(c);
+        setTimeout(()=>c.classList.add("show"), delay);
+        delay+=80;
+      });
+      textEl.appendChild(wordEl);
+      if (w < messages[index].text.split(" ").length-1) {
+        const s = document.createElement("span");
+        s.className = "space";
+        s.innerHTML="&nbsp;";
+        textEl.appendChild(s);
+      }
+    });
+
+    setTimeout(hide, delay+2200);
+  }
+
+  function hide() {
+    document.querySelectorAll(".char").forEach((c,i)=>
+      setTimeout(()=>c.classList.remove("show"), i*20)
+    );
+
+    setTimeout(()=>{
+      index++;
+      if (index < messages.length) showMessage();
+      else {
+        document.body.classList.add("final-bg");
+        textEl.style.display="none";
+        finalEl.style.display="flex";
+      }
+    },900);
+  }
+
+  showMessage();
+</script>
+
+</body>
+</html>
